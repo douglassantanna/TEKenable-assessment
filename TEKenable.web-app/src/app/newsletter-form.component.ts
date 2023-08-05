@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { HowHeardAboutUs } from './models/how-heard-about-us';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-newsletter-form',
@@ -128,7 +129,9 @@ export class NewsletterFormComponent implements OnInit {
     { id: HowHeardAboutUs.WordOfMouth, value: 'Word of mouth' },
     { id: HowHeardAboutUs.Other, value: 'Other' }
   ];
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router) { }
 
   ngOnInit() {
     this.newsletterForm = this.formBuilder.group({
@@ -141,6 +144,7 @@ export class NewsletterFormComponent implements OnInit {
   onSubmit() {
     if (this.newsletterForm.valid) {
       console.log(this.newsletterForm.value);
+      this.router.navigate(['/signupconfirmation']);
     }
   }
   get email() { return this.newsletterForm.get('email') as FormControl }

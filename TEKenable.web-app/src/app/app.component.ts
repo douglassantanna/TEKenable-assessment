@@ -11,7 +11,6 @@ import { NewsletterFormComponent } from './newsletter-form.component';
     RouterOutlet,
     NewsletterFormComponent],
   template: `
-    <app-newsletter-form />
     <router-outlet></router-outlet>
   `,
   styles: [],
