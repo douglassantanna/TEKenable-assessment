@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\pp\\TEKenable-assessment\\api\\api.csproj": {}
+    "c:\\pp\\TEKenable-assessment\\api\\api.csproj": {}
   },
   "projects": {
-    "C:\\pp\\TEKenable-assessment\\api\\api.csproj": {
+    "c:\\pp\\TEKenable-assessment\\api\\api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\pp\\TEKenable-assessment\\api\\api.csproj",
+        "projectUniqueName": "c:\\pp\\TEKenable-assessment\\api\\api.csproj",
         "projectName": "api",
-        "projectPath": "C:\\pp\\TEKenable-assessment\\api\\api.csproj",
+        "projectPath": "c:\\pp\\TEKenable-assessment\\api\\api.csproj",
         "packagesPath": "C:\\Users\\DouglasCraici\\.nuget\\packages\\",
-        "outputPath": "C:\\pp\\TEKenable-assessment\\api\\obj\\",
+        "outputPath": "c:\\pp\\TEKenable-assessment\\api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\DouglasCraici\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -21,7 +21,6 @@
           "net7.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -43,6 +42,14 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[7.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "target": "Package",
+              "version": "[7.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.InMemory": {
+              "target": "Package",
+              "version": "[7.0.9, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
