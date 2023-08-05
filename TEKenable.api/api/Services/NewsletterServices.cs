@@ -48,7 +48,7 @@ public class NewsletterServices : INewsletterServices
         return response;
     }
 
-    private bool IsEmailAlreadySignedUp(SignUpRequest request)
+    public bool IsEmailAlreadySignedUp(SignUpRequest request)
     {
         return _context.Contacts.Any(x => x.Email == request.Email);
     }

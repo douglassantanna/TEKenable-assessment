@@ -25,10 +25,4 @@ public class NewsletterController : ControllerBase
         }
         return Ok();
     }
-
-    [HttpGet]
-    public IActionResult Get()
-    {
-        return Ok(_newsletterServices.GetContacts());
-    }
 }
