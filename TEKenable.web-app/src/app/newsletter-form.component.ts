@@ -37,7 +37,10 @@ import { Router } from '@angular/router';
         <textarea cols="2" rows="4" #reasonForSignUp maxlength="255" formControlName="reasonForSignUp" class="form-control"></textarea>
         <span>{{reasonForSignUp.value.length}} / 255</span>
       </div>
-      <button type="submit" [disabled]="!newsletterForm.valid">Subscribe</button>
+      <button *ngIf="!isLoading;else loading" type="submit" [disabled]="!newsletterForm.valid">Subscribe</button>
+      <ng-template #loading>
+        <button type="button">Subscribing...</button>
+      </ng-template>
     </form>
   </div>
   `,
@@ -111,6 +114,8 @@ import { Router } from '@angular/router';
     margin-right: 1rem;
     margin-bottom: 1rem;
     margin-top: 1rem;
+    position: relative;
+    transition: padding-right .3s ease-out;
   }
   button:hover {
     background-color: rgb(23, 108, 193);
@@ -129,6 +134,7 @@ export class NewsletterFormComponent implements OnInit {
     { id: HowHeardAboutUs.WordOfMouth, value: 'Word of mouth' },
     { id: HowHeardAboutUs.Other, value: 'Other' }
   ];
+  isLoading: boolean = false;
   constructor(
     private formBuilder: FormBuilder,
     private router: Router) { }
@@ -143,8 +149,11 @@ export class NewsletterFormComponent implements OnInit {
 
   onSubmit() {
     if (this.newsletterForm.valid) {
-      console.log(this.newsletterForm.value);
-      this.router.navigate(['/signupconfirmation']);
+      this.isLoading = true;
+      setTimeout(() => {
+        console.log(this.newsletterForm.value);
+        this.router.navigate(['/signupconfirmation']);
+      }, 3000);
     }
   }
   get email() { return this.newsletterForm.get('email') as FormControl }
