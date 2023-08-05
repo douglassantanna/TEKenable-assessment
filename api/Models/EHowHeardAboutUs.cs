@@ -1,4 +1,4 @@
-namespace api.Enums;
+namespace api.Models;
 public enum EHowHeardAboutUs
 {
     Advert = 1,

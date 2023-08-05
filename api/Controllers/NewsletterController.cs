@@ -1,3 +1,5 @@
+using api.Models;
+using api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
@@ -6,10 +8,27 @@ namespace api.Controllers;
 [Route("[controller]")]
 public class NewsletterController : ControllerBase
 {
-    private readonly ILogger<NewsletterController> _logger;
+    private readonly INewsletterServices _newsletterServices;
 
-    public NewsletterController(ILogger<NewsletterController> logger)
+    public NewsletterController(INewsletterServices newsletterServices)
     {
-        _logger = logger;
+        _newsletterServices = newsletterServices;
+    }
+
+    [HttpPost("sign-up")]
+    public IActionResult SignUp(SignUpRequest request)
+    {
+        var response = _newsletterServices.SignUp(request);
+        if (!response.Success)
+        {
+            return BadRequest(response);
+        }
+        return Ok();
+    }
+
+    [HttpGet]
+    public IActionResult Get()
+    {
+        return Ok(_newsletterServices.GetContacts());
     }
 }
