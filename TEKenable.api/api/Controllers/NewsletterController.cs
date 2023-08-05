@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/newsletter")]
 public class NewsletterController : ControllerBase
 {
     private readonly INewsletterServices _newsletterServices;
@@ -18,7 +18,7 @@ public class NewsletterController : ControllerBase
     }
 
     [HttpPost("sign-up")]
-    public IActionResult SignUp(SignUpRequest request)
+    public IActionResult SignUp([FromBody] SignUpRequest request)
     {
         var response = _newsletterServices.SignUp(request);
         if (!response.Success)

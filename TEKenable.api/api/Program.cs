@@ -13,6 +13,15 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddScoped<INewsletterServices, NewsletterServices>();
     builder.Services.AddScoped<IValidator<SignUpRequest>, SignUpRequestValidator>();
     builder.Services.AddDbContext<NewsletterDataContext>(opt => opt.UseInMemoryDatabase("Database"));
+    builder.Services.AddCors(opt =>
+    {
+        opt.AddPolicy("AllowAll", policy =>
+        {
+            policy.AllowAnyHeader();
+            policy.AllowAnyMethod();
+            policy.AllowAnyOrigin();
+        });
+    });
 }
 
 
@@ -25,6 +34,8 @@ var app = builder.Build();
     }
 
     app.UseHttpsRedirection();
+
+    app.UseCors("AllowAll");
 
     app.UseAuthorization();
 
