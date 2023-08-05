@@ -7,6 +7,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace tests;
@@ -17,9 +18,14 @@ public class NewsletterTests
     private readonly SignUpRequest _validRequest;
     private readonly SignUpRequest _invalidRequest;
     private readonly Mock<INewsletterServices> _mockNewsletterServices;
+    private readonly Mock<ILogger<NewsletterServices>> _mockNewsletterServicesLogger;
+
+    private readonly Mock<ILogger<NewsletterController>> _mockControllerLogger;
     public NewsletterTests()
     {
         _mockNewsletterServices = new();
+        _mockNewsletterServicesLogger = new();
+        _mockControllerLogger = new();
         _validator = new SignUpRequestValidator();
         _invalidRequest = new SignUpRequest("invalid-email",
                                             "Reason",
@@ -67,7 +73,9 @@ public class NewsletterTests
         context.SaveChanges();
 
         //Act
-        var service = new NewsletterServices(context, Mock.Of<IValidator<SignUpRequest>>());
+        var service = new NewsletterServices(context,
+                                             Mock.Of<IValidator<SignUpRequest>>(),
+                                             _mockNewsletterServicesLogger.Object);
 
         var result = service.IsEmailAlreadySignedUp(_validRequest);
 
@@ -81,7 +89,9 @@ public class NewsletterTests
         //Arrange
         var context = new NewsletterDataContext(GetInMemoryDbContextOptions());
 
-        var service = new NewsletterServices(context, Mock.Of<IValidator<SignUpRequest>>());
+        var service = new NewsletterServices(context,
+                                             Mock.Of<IValidator<SignUpRequest>>(),
+                                             _mockNewsletterServicesLogger.Object);
 
         //Act
         var result = service.IsEmailAlreadySignedUp(_validRequest);
@@ -99,7 +109,9 @@ public class NewsletterTests
 
         var context = new NewsletterDataContext(GetInMemoryDbContextOptions());
 
-        var service = new NewsletterServices(context, mockValidator.Object);
+        var service = new NewsletterServices(context,
+                                             mockValidator.Object,
+                                             _mockNewsletterServicesLogger.Object);
 
         // Act
         var response = service.SignUp(_validRequest);
@@ -116,7 +128,7 @@ public class NewsletterTests
         _mockNewsletterServices.Setup(s => s.SignUp(It.IsAny<SignUpRequest>()))
             .Returns(new SignUpResponse { Success = true });
 
-        var controller = new NewsletterController(_mockNewsletterServices.Object);
+        var controller = new NewsletterController(_mockNewsletterServices.Object, _mockControllerLogger.Object);
 
         // Act
         var result = controller.SignUp(_validRequest);
@@ -132,7 +144,7 @@ public class NewsletterTests
         _mockNewsletterServices.Setup(s => s.SignUp(It.IsAny<SignUpRequest>()))
             .Returns(new SignUpResponse { Success = false });
 
-        var controller = new NewsletterController(_mockNewsletterServices.Object);
+        var controller = new NewsletterController(_mockNewsletterServices.Object, _mockControllerLogger.Object);
 
         // Act
         var result = controller.SignUp(_validRequest);
