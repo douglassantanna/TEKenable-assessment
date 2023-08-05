@@ -4,6 +4,8 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, 
 
 import { HowHeardAboutUs } from './models/how-heard-about-us';
 import { Router } from '@angular/router';
+import { NewsletterService } from './newsletter.service';
+import { SignUpRequest } from './models/signup-request';
 
 @Component({
   selector: 'app-newsletter-form',
@@ -16,6 +18,11 @@ import { Router } from '@angular/router';
   template: `
     <div class="newsletter-form-container">
     <h2>Subscribe to our Newsletter</h2>
+    <div *ngIf="errorMessages.length">
+      <div *ngFor="let error of errorMessages">
+        <p class="alert alert-danger">{{error}}</p>
+      </div>
+    </div>
     <form [formGroup]="newsletterForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label>Email:</label>
@@ -26,8 +33,8 @@ import { Router } from '@angular/router';
       <div class="form-group">
         <label>How did you hear about us?</label>
         <select formControlName="howHeardAboutUs" class="form-control">
-          <option *ngFor="let options of howHeardAboutUsOptions" [value]="options.id">
-            {{ options.value }}
+          <option *ngFor="let option of howHeardAboutUsOptions" [value]="option.id">
+            {{ option.value }}
           </option>
         </select>
         <div *ngIf="howHeardAboutUs.hasError('required')" class="alert alert-danger">Required field</div>
@@ -135,9 +142,11 @@ export class NewsletterFormComponent implements OnInit {
     { id: HowHeardAboutUs.Other, value: 'Other' }
   ];
   isLoading: boolean = false;
+  errorMessages: string[] = [];
   constructor(
     private formBuilder: FormBuilder,
-    private router: Router) { }
+    private router: Router,
+    private newsletterService: NewsletterService) { }
 
   ngOnInit() {
     this.newsletterForm = this.formBuilder.group({
@@ -149,11 +158,24 @@ export class NewsletterFormComponent implements OnInit {
 
   onSubmit() {
     if (this.newsletterForm.valid) {
+      let request = {
+        email: this.newsletterForm.value.email,
+        reasonForSignUp: this.newsletterForm.value.reasonForSignUp,
+        howHeardAboutUs: parseInt(this.newsletterForm.value.howHeardAboutUs)
+      } as SignUpRequest;
+
       this.isLoading = true;
-      setTimeout(() => {
-        console.log(this.newsletterForm.value);
-        this.router.navigate(['/signupconfirmation']);
-      }, 3000);
+      this.newsletterService.signUp(request).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.newsletterForm.reset();
+          this.router.navigate(['/signupconfirmation']);
+        },
+        error: (err) => {
+          this.errorMessages = err.error.errors;
+          this.isLoading = false;
+        }
+      });
     }
   }
   get email() { return this.newsletterForm.get('email') as FormControl }
