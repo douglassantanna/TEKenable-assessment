@@ -1,7 +1,6 @@
 using api.Data;
 using api.Models;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 
 namespace api.Services;
 public class NewsletterServices : INewsletterServices
@@ -17,11 +16,6 @@ public class NewsletterServices : INewsletterServices
         _context = context;
         _validator = validator;
         _logger = logger;
-    }
-
-    public IEnumerable<Contact> GetContacts()
-    {
-        return _context.Contacts.AsNoTracking();
     }
 
     public SignUpResponse SignUp(SignUpRequest request)
